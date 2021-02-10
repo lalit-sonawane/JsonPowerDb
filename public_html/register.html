@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html lang="en">
+    <head>
+        <title>Web-Form Example</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+        <script src="http://login2explore.com/jpdb/resources/js/0.0.3/jpdb-commons.js"></script>
+    </head>
+    <body>
+        <div class="container" style="width: 27%;margin: 100px auto;background-color: activecaption;font-family:aerial;">
+            <h2 style="font-size: 30px;"><b>Employee Registration Form</b></h2><hr/>
+            <form id="empForm" method="post" style="margin: 0 auto;font-size: 20px;">
+                <div class="form-group">
+                    <span><label for="empId">Employee ID:</label> <label id="empIdMsg">
+                        </label></span>
+                    <input type="text" class="form-control" name="empId" id="empId"
+                           placeholder="eg. P01" required>
+                </div>
+                <div class="form-group">
+                    <label for="empName">Employee Name:</label>
+                    <input type="text" class="form-control" id="empName"
+                           placeholder="eg. Lalit Sonawane" name="empName">
+                </div>
+                <div class="form-group">
+                    <label for="empEmail">Email:</label>
+                    <input type="email" class="form-control" id="empEmail"
+                           placeholder="eg. lsonawane271@gmail.com" name="empEmail">
+                </div>
+                <div class="form-group">
+                    <label for="empDOB">Date of Birth:</label>
+                    <input type="date" class="form-control" id="empDOB"
+                           name="empDOB">
+                </div>
+                <input type="button" class="btn btn-block btn-primary" id="empSave" value="Save"
+                       onclick="saveEmployee();">
+            </form>
+            <br>
+        </div>
+        <script>
+            $("#empId").focus();
+            function validateAndGetFormData() {
+                var empIdVar = $("#empId").val();
+                if (empIdVar === "") {
+                    alert("Employee ID Required Value");
+                    $("#empId").focus();
+                    return "";
+                }
+                var empNameVar = $("#empName").val();
+                if (empNameVar === "") {
+                    alert("Employee Name is Required Value");
+                    $("#empName").focus();
+                    return "";
+                }
+                var empEmailVar = $("#empEmail").val();
+                if (empEmailVar === "") {
+                    alert("Employee Email is Required Value");
+                    $("#empEmail").focus();
+                    return "";
+                }
+                var empDOBVar = $("#empDOB").val();
+                if (empDOBVar === "") {
+                    alert("Employee Email is Required Value");
+                    $("#empDOB").focus();
+                    return "";
+                }
+                var jsonStrObj = {
+                    empId: empIdVar,
+                    empName: empNameVar,
+                    empEmail: empEmailVar,
+                    empDOB: empDOBVar,
+                };
+                return JSON.stringify(jsonStrObj);
+            }
+            
+            function resetForm() {
+                $("#empId").val("")
+                $("#empName").val("");
+                $("#empEmail").val("");
+                $("#empDOB").val("");
+                $("#empId").focus();
+            }
+            
+            function saveEmployee() {
+                var jsonStr = validateAndGetFormData();
+                if (jsonStr === "") {
+                    return;
+                }
+                var putReqStr = createPUTRequest("90935461|-31948798143018743|90931478",
+                        jsonStr, "LalitDB", "EMP-REL");
+                alert(putReqStr);
+                jQuery.ajaxSetup({async: false});
+                var resultObj = executeCommandAtGivenBaseUrl(putReqStr,
+                        "http://api.login2explore.com:5577", "/api/iml");
+                alert(JSON.stringify(resultObj));
+                jQuery.ajaxSetup({async: true});
+                resetForm();
+            }
+        </script>
+    </body>
+</html>
